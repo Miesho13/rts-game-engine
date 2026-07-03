@@ -1,0 +1,20 @@
+The render shoud be base on SCENE what we can understude as context for draw.
+We draw only one scen in time.
+
+* MAIN_GAME_SCENE
+* LOGIN_SCREAN_SCENE
+* ect.
+
+Each scen can has several plain. The plain is independent drawing unite.
+The order of drawing plain in winbuffer is the following:
+
+* FIRST_PLAIN  <------------------- drawing first
+* SECOUND_PLAIN
+* ... 
+* ... 
+* ... 
+* LAST_PLAINT  <------------------ drawing last
+
+It follows that the last plain is the top level plain.
+
+Drawing to winbuf is platform depended.  
