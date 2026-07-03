@@ -1,0 +1,3 @@
+[submodule "extra/raylib"]
+	path = extra/raylib
+	url = git@github.com:raysan5/raylib.git
