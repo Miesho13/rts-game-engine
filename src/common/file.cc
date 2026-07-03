@@ -1,19 +1,21 @@
 #include "./file.h"
+#include "./type.h"
 
 #include <fstream>
 
+using namespace common::type;
+
 using std::ifstream;
 using std::ios;
+using std::string_view;
 
 namespace common {
-    string skip_line(string &input) {
+    void skip_line(string &input) {
         size_t pos = input.find('\n');
         if (pos == string::npos) {
             input.clear();
-            return "";
         }
         input = input.substr(pos + 1);
-        return input;
     }
 
     string get_line(string &input) {
@@ -41,5 +43,60 @@ namespace common {
         file.close();
 
         return buffer;
+    }
+
+    string_view get_word(string_view &input, c8 seperator) {
+        u32 len = input.size();
+
+        for (u32 i = 0; i < len; i++) {
+            if (input[i] == seperator) { 
+                return input.substr(0, i);
+            }
+        }
+
+        return input;
+    }
+
+    void skip_word(string_view &input, c8 seperator) {
+        u32 len = input.size();
+
+        for (u32 i = 0; i < len; i++) {
+            if (input[i] == seperator) { 
+                input = input.substr(i + 1);
+                return;
+            }
+        }
+
+        input = string_view();
+    }
+
+    void skip_line(string_view &input) {
+        u32 len = input.size();
+
+        for (u32 i = 0; i < len; ++i) {
+            if (input[i] == '\n') {
+                input = input.substr(i + 1);
+                return;
+            }
+        }
+
+        input = std::string_view();
+    }
+
+    string_view get_line(string_view &input) {
+        u32 len = input.size();
+
+        for (u32 i = 0; i < len; ++i) {
+            if (input[i] == '\n') {
+                string_view line = input.substr(0, i);
+                input = input.substr(i + 1);
+                return line;
+            }
+        }
+
+        string_view line = input;
+        input = string_view();
+
+        return line;
     }
 }
