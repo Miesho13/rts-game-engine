@@ -3,35 +3,47 @@
 
 #include "type.h"
 #include <string>
+#include <mutex>
+#include <string>
+#include <string_view>
+#include <format>
 
 using std::string_view;
 
 namespace common {
-    using printer_func = void (*)(string_view, ...);
+    using printer_func = void (*)(std::string_view);
 
-    void set_printer(printer_func func);
-    void log(string_view format, ...);
+    inline void default_print(std::string_view text) {
+        std::fwrite(text.data(), 1, text.size(), stdout);
+        std::fputc('\n', stdout);
+    }
+
+    // Globalny stan backendu + mutex dla bezpieczeństwa wątkowego.
+    inline printer_func g_printer = default_print;
+    inline std::mutex g_printer_mutex;
+
+    inline void set_printer(printer_func func) {
+        std::scoped_lock lock(g_printer_mutex);
+        g_printer = (func ? func : default_print);
+    }
+
+    inline printer_func get_printer() {
+        std::scoped_lock lock(g_printer_mutex);
+        return g_printer;
+    }
+
+    template <typename... Args>
+    void log(std::format_string<Args...> fmt, Args&&... args) {
+        std::string msg = std::format(fmt, std::forward<Args>(args)...);
+
+        printer_func out;
+        {
+            std::scoped_lock lock(g_printer_mutex);
+            out = g_printer;
+        }
+
+        out(msg);
+    }
 }
-
-#define LOG_LEVEL (0)
-
-#if LOG_LEVEL == 1
-#   define LOG_INFO(format, ...)  (void) 
-#   define LOG_DEBUG(format, ...) (void)
-#   define LOG_TRACE(format, ...) (void)
-#elif LOG_LEVEL == 2
-#   define LOG_INFO(format, ...)  (void)
-#   define LOG_DEBUG(format, ...) (void)
-#   define LOG_TRACE(format, ...) (void)
-#elif LOG_LEVEL == 3 
-#   define LOG_INFO(format, ...)  (void)
-#   define LOG_DEBUG(format, ...) (void)
-#   define LOG_TRACE(format, ...) (void)
-#else
-#   define LOG_INFO(format, ...)  (void)
-#   define LOG_DEBUG(format, ...) (void)
-#   define LOG_TRACE(format, ...) (void)
-#endif
-
 
 #endif // __LOG__
