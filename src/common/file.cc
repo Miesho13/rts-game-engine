@@ -1,5 +1,6 @@
 #include "./file.h"
 #include "./type.h"
+#include "./result.h"
 
 #include <fstream>
 
@@ -8,6 +9,7 @@ using namespace common::type;
 using std::ifstream;
 using std::ios;
 using std::string_view;
+using common::Result;
 
 namespace common {
     void skip_line(string &input) {
@@ -33,8 +35,12 @@ namespace common {
         return result;
     }
 
-    string read_file_to_string(string_view path) {
+    Ok<string> read_file_to_string(string_view path) {
         ifstream file(path.data(), ios::ate | ios::binary);
+
+        if (file.is_open() == false) {
+            return {"", false};
+        }
 
         size_t size = file.tellg();
         file.seekg(0);
@@ -42,7 +48,7 @@ namespace common {
         file.read(&buffer[0], size);
         file.close();
 
-        return buffer;
+        return {buffer, true};
     }
 
     string_view get_word(string_view &input, c8 seperator) {
@@ -88,15 +94,10 @@ namespace common {
 
         for (u32 i = 0; i < len; ++i) {
             if (input[i] == '\n') {
-                string_view line = input.substr(0, i);
-                input = input.substr(i + 1);
-                return line;
+                return input.substr(0, i);
             }
         }
 
-        string_view line = input;
-        input = string_view();
-
-        return line;
+        return input;
     }
 }
