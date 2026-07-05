@@ -14,12 +14,6 @@ using common::Result;
 
 namespace common {
     Ok<string> read_file_to_string(string_view path);
-    string get_line(string &input);
-    string_view get_line(string_view &input);
-    void skip_line(string &input);
-    void skip_line(string_view &input);
-    string_view get_word(string_view &input, c8 seperator = ' ');
-    void skip_word(string_view &input, c8 seperator = ' ');
 }
 
 
