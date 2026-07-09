@@ -26,9 +26,9 @@ namespace engine {
             // Function shoud handle win event, input and draw in frame
             void step(function<void()> draw_frame);
 
-            void end_frame();
             void begin_frame();
-            void clear_frame();
+            void end_frame();
+            void clear_frame(uint32_t rgb32);
 
             // Draw
             void draw_text(const c8 *msg, i32 posx, i32 posy, i32 font_size, u32 color);

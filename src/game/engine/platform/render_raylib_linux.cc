@@ -40,8 +40,8 @@ namespace engine
         EndDrawing();
     }
 
-    void Render::clear_frame() {
-        ClearBackground(BLUE);
+    void Render::clear_frame(uint32_t rgb32) {
+        ClearBackground(RGB32_TO_COLOR(rgb32));
     }
 
     void Render::draw_text(const c8 *msg, i32 posx, i32 posy, i32 font_size, u32 color) {
