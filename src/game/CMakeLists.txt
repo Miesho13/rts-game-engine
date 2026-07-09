@@ -6,5 +6,5 @@ add_library(
     game.cc
     engine/render.cc
     scene/menu.cc
-    model.cc
+    engine/model.cc
 )
