@@ -46,4 +46,8 @@ namespace common {
     }
 }
 
+#define log_err(fmt, ...) ::common::log("[err] " fmt, ##__VA_ARGS__)
+#define log_war(fmt, ...) ::common::log("[war] " fmt, ##__VA_ARGS__)
+#define log_inf(fmt, ...) ::common::log("[inf] " fmt, ##__VA_ARGS__)
+
 #endif // __LOG__
